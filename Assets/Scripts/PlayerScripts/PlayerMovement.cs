@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider2D playerCollider;
 
     // Input
-    private float horizontalInput;
-    private bool jumpKeyDown;
+    public float horizontalInput;
+    public bool jumpKeyDown;
     private bool jumpKeyUp;
     private float jumpTime; // This variable is for WHEN the jump was pressed, not the duration of the jump
 
@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private bool justJumped; // Use for animations
     private bool justLanded; // Use for animations
     private bool canBufferJump = false;
-    [SerializeField]private bool grounded;
+    public bool grounded;
 
     // Gravity
     private float maxFallSpeed = 120f;

@@ -6,7 +6,7 @@ using TMPro;
 public class DialogueSystem : MonoBehaviour
 {
     // Stop Player Movement When Dialog Starts
-    private PlayerMovement movementScript;
+    private StopMovement stopMovementScript;
     public TMP_Text dialogTextUI;
     private Queue<string> dialogs;
     public GameObject dialogPanel;
@@ -14,7 +14,7 @@ public class DialogueSystem : MonoBehaviour
     void Start()
     {
         dialogs = new Queue<string>();
-        movementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        stopMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<StopMovement>();
     }
 
     // Update is called once per frame
@@ -25,9 +25,8 @@ public class DialogueSystem : MonoBehaviour
 
     public void StartDialogue(Dialog dialogue)
     {
-        Time.timeScale = 0;
         dialogs.Clear();
-        movementScript.enabled = false;
+        stopMovementScript.StopPlayerMovement();
         foreach (string dialog in dialogue.dialogs)
         {
             dialogs.Enqueue(dialog);
@@ -66,8 +65,7 @@ public class DialogueSystem : MonoBehaviour
 
     public void EndDialogue()
     {
-        Time.timeScale = 1;
+        stopMovementScript.ResumePlayerMovement();
         dialogPanel.SetActive(false);
-        movementScript.enabled = true;
     }
 }
