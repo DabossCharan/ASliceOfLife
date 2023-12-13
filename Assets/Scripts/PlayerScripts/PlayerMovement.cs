@@ -10,30 +10,29 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask layers;
     private Rigidbody2D playerRb;
     private CapsuleCollider2D playerCollider;
+    private SurfaceInteractions surfaceInteractions;
 
     // Input
     public float horizontalInput;
     public bool jumpKeyDown;
-    private bool jumpKeyUp;
+    public bool jumpKeyUp;
     private float jumpTime; // This variable is for WHEN the jump was pressed, not the duration of the jump
 
     // Horizontal Movement
-    private float horizontalSpeed = 14;
-    private float horizontalAccel = 120;
+    public float horizontalSpeed = 14;
+    public float horizontalAccel = 120;
 
     // Jump
-    private float jumpForce = 30;
+    public float jumpForce = 30;
     private float smallJumpGravityModifier = 3;
     private bool smallJump = true;
-    private bool justJumped; // Use for animations
-    private bool justLanded; // Use for animations
     private bool canBufferJump = false;
     public bool grounded;
 
     // Gravity
-    private float maxFallSpeed = 120f;
-    private float minFallSpeed = 80f;
-    private float fallSpeedLim = -40f;
+    public float maxFallSpeed = 125f;
+    public float minFallSpeed = 75f;
+    public float fallSpeedLim = -100f;
     private float fallSpeed;
 
     // Collisions
@@ -43,10 +42,15 @@ public class PlayerMovement : MonoBehaviour
     private bool touchingLeft;
 
     // Final Movement
-    private Vector2 playerVelocity;
+    public Vector2 playerVelocity;
 
     // Sprite Appearance
     private bool flipSprite = false;
+
+    // Animator Parameters
+    public bool isMoving;
+    public bool justJumped; // Use for animations
+    public bool justLanded; // Use for animations
 
     // Continue to Modify and Understand how Tarodev's stuff works
     [SerializeField] private float _apexBonus = 2;
@@ -59,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody2D>(); 
         playerCollider = GetComponent<CapsuleCollider2D>();
+        surfaceInteractions = GameObject.FindGameObjectWithTag("SurfaceInteractions").GetComponent<SurfaceInteractions>();
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders; // STUDY THIS
     }
 
@@ -77,15 +82,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (horizontalInput != 0)
         {
-            playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, horizontalInput * horizontalSpeed, horizontalAccel * Time.deltaTime);            
+            isMoving = true;
+            playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, horizontalInput * horizontalSpeed, horizontalAccel * Time.deltaTime);
             // Bonus at the apex of a jump
-            var apexBonus = Mathf.Sign(horizontalInput) * _apexBonus * apexPoint;
+            var apexBonus = horizontalInput * _apexBonus * apexPoint;
             playerVelocity.x += apexBonus * Time.deltaTime;
         }
         else
         {
             // Executes if no input, makes the player halt to a stop
             playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, 0, horizontalAccel * Time.deltaTime);
+
+            if (playerVelocity.x == 0)
+            {
+                isMoving = false;
+            }
         }
 
         if (playerRb.velocity.x > 0 && touchingRight || playerRb.velocity.x < 0 && touchingLeft)
@@ -126,17 +137,8 @@ public class PlayerMovement : MonoBehaviour
         {
             grounded = false;
             playerVelocity.y = jumpForce;
-            //playerRb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             smallJump = false;
-            //timeLeftGrounded = float.MinValue;
-            justJumped = true;
         }
-        else
-        {
-            justJumped = false;
-        }
-
-        
     }
  
     private void Gravity()
@@ -193,6 +195,14 @@ public class PlayerMovement : MonoBehaviour
         if (jumpKeyDown)
         {
             jumpTime = Time.time;
+            justJumped = true;
+            justLanded = false;
+            // Deal With Orange Platforms
+            surfaceInteractions.stick = false;
+        } else
+        {
+            justJumped = false;
+            justLanded = false;
         }
 
         // Change Sprite Direction Based on Input
@@ -216,5 +226,37 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = currentScale;
         flipSprite = !flipSprite;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("OrangePlatform"))
+        {
+            surfaceInteractions.stick = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("OrangePlatform"))
+        {
+            surfaceInteractions.stick = false;
+        }
+    }
+
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.collider.CompareTag("OrangePlatform"))
+    //    {
+    //        surfaceInteractions.stick = true;
+    //    }
+    //}
+
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.collider.CompareTag("OrangePlatform"))
+    //    {
+    //        surfaceInteractions.stick = false;
+    //    }
+    //}
 }
 

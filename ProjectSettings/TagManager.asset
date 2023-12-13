@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - OrangePlatform
+  - SurfaceInteractions
   layers:
   - Default
   - TransparentFX
