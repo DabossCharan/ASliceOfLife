@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     private bool smallJump = true;
     private bool canBufferJump = false;
     public bool grounded;
+    public bool aboutToLand;
+    public float distanceThreshold;
 
     // Gravity
     public float maxFallSpeed = 125f;
@@ -167,6 +169,7 @@ public class PlayerMovement : MonoBehaviour
         touchingCeil = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.up, 0.05f, layers);
         touchingRight = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.right, 0.05f, layers);
         touchingLeft = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.up, 0.05f, layers);
+        aboutToLand = !touchingGround && Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.down, distanceThreshold, layers);
 
         if (touchingCeil)
         {

@@ -17,47 +17,47 @@ public class PlayerAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
 
         if (playerMovement.jumpKeyDown)
         {
             playerAnimator.SetBool("startJump", true);
-            playerAnimator.SetBool("isJumping", false);
-            playerAnimator.SetBool("isLanding", false);
-            playerAnimator.SetBool("isFalling", false);
+            //playerAnimator.SetBool("isJumping", false);
+            //playerAnimator.SetBool("isLanding", false);
+            //playerAnimator.SetBool("isFalling", false);
         }
         else if (playerMovement.playerVelocity.y > 0)
         {
             playerAnimator.SetBool("isJumping", true);
-            playerAnimator.SetBool("startJump", false);
-            playerAnimator.SetBool("isLanding", false);
-            playerAnimator.SetBool("isFalling", false);
+            //playerAnimator.SetBool("startJump", false);
+            //playerAnimator.SetBool("isLanding", false);
+            //playerAnimator.SetBool("isFalling", false);
         }
-        else if (playerMovement.justLanded)
+        else if (playerMovement.aboutToLand)
         {
-            playerAnimator.SetBool("isLanding", true);
-            playerAnimator.SetBool("isJumping", false);
-            playerAnimator.SetBool("startJump", false);
+            //playerAnimator.SetBool("isLanding", true);
+            //playerAnimator.SetBool("isJumping", false);
+            //playerAnimator.SetBool("startJump", false);
             playerAnimator.SetBool("isFalling", false);
         }
-        else if (playerMovement.playerVelocity.y < 0)
+        else if (playerMovement.playerVelocity.y < 0 && !playerMovement.grounded)
         {
             playerAnimator.SetBool("isFalling", true);
-            playerAnimator.SetBool("isJumping", false);
-            playerAnimator.SetBool("isLanding", false);
-            playerAnimator.SetBool("startJump", false);
+            //playerAnimator.SetBool("isJumping", false);
+            //playerAnimator.SetBool("isLanding", false);
+            //playerAnimator.SetBool("startJump", false);
         }
         else
         {
             playerAnimator.SetBool("startJump", false);
             playerAnimator.SetBool("isJumping", false);
-            playerAnimator.SetBool("isLanding", false);
+            //playerAnimator.SetBool("isLanding", false);
             playerAnimator.SetBool("isFalling", false);
-        }
-
-        if (playerMovement.grounded)
-        {
             playerAnimator.SetBool("isMoving", playerMovement.isMoving);
         }
+
+        //if (playerMovement.grounded)
+        //{
+        //    playerAnimator.SetBool("isMoving", playerMovement.isMoving);
+        //}
     }
 }
