@@ -6,6 +6,7 @@ TagManager:
   tags:
   - OrangePlatform
   - SurfaceInteractions
+  - Menu
   layers:
   - Default
   - TransparentFX
