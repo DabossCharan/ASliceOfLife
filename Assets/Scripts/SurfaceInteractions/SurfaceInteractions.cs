@@ -12,6 +12,10 @@ public class SurfaceInteractions : MonoBehaviour
     public float stickyHorizontalBonus;
     public float stickyBonusTime;
 
+    [Header("Ice Cream Mountain Settings")]
+    public bool climbingIceCream = false;
+    public float iceCreamSlide;
+
     public bool hasBonus = false;
     private float regularJumpForce;
     private float regularHorizontalAccel;
@@ -32,6 +36,7 @@ public class SurfaceInteractions : MonoBehaviour
     void Update()
     {
         HandleOrangePlatform();
+        HandleIceCreamMountain();
     }
 
     #region HandleOrangePlatforms
@@ -80,6 +85,27 @@ public class SurfaceInteractions : MonoBehaviour
 
     #endregion
 
+    #region IceCreamMountain
+    void HandleIceCreamMountain()
+    {
+        if (!climbingIceCream)
+        {   
+            if (hasBonus)
+            {
+                CancelBonus(0, iceCreamSlide);
+            }
+
+        } else if (climbingIceCream)
+        {
+            if (!hasBonus)
+            {
+                AddBonus(0, -iceCreamSlide);
+            }
+        }
+
+        
+    }
+    #endregion
 
     #region Bonuses
     void AddBonus(float jumpBonus, float horizontalBonus)

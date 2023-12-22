@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimator : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private SurfaceInteractions surfaceInteractions;
     private Animator playerAnimator;
 
     // Start is called before the first frame update
@@ -12,20 +13,21 @@ public class PlayerAnimator : MonoBehaviour
     {
         playerAnimator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
+        surfaceInteractions = GameObject.FindGameObjectWithTag("SurfaceInteractions").GetComponent<SurfaceInteractions>();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (playerMovement.jumpKeyDown)
+        if (playerMovement.jumpKeyDown) //&& !surfaceInteractions.climbingIceCream)
         {
             playerAnimator.SetBool("startJump", true);
             //playerAnimator.SetBool("isJumping", false);
             //playerAnimator.SetBool("isLanding", false);
             //playerAnimator.SetBool("isFalling", false);
         }
-        else if (playerMovement.playerVelocity.y > 0)
+        else if (playerMovement.playerVelocity.y > 0) //&& !surfaceInteractions.climbingIceCream)
         {
             playerAnimator.SetBool("isJumping", true);
             //playerAnimator.SetBool("startJump", false);
@@ -39,7 +41,7 @@ public class PlayerAnimator : MonoBehaviour
             //playerAnimator.SetBool("startJump", false);
             playerAnimator.SetBool("isFalling", false);
         }
-        else if (playerMovement.playerVelocity.y < 0 && !playerMovement.grounded)
+        else if (playerMovement.playerVelocity.y < 0 && !playerMovement.grounded)//&& !surfaceInteractions.climbingIceCream)
         {
             playerAnimator.SetBool("isFalling", true);
             //playerAnimator.SetBool("isJumping", false);

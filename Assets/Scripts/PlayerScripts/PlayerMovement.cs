@@ -34,17 +34,18 @@ public class PlayerMovement : MonoBehaviour
     // Gravity
     public float maxFallSpeed = 125f;
     public float minFallSpeed = 75f;
-    public float fallSpeedLim = -100f;
+    public float fallSpeedLim = -70f;
     private float fallSpeed;
 
     // Collisions
-    private bool touchingGround;
-    private bool touchingCeil;
-    private bool touchingRight;
-    private bool touchingLeft;
+    public bool touchingGround;
+    public bool touchingCeil;
+    public bool touchingRight;
+    public bool touchingLeft;
 
     // Final Movement
     public Vector2 playerVelocity;
+    public Quaternion playerRotation;
 
     // Sprite Appearance
     private bool flipSprite = false;
@@ -67,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         playerCollider = GetComponent<CapsuleCollider2D>();
         surfaceInteractions = GameObject.FindGameObjectWithTag("SurfaceInteractions").GetComponent<SurfaceInteractions>();
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders; // STUDY THIS
+        playerRotation = transform.rotation;
     }
 
     void Update()
@@ -92,10 +94,15 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Executes if no input, makes the player halt to a stop
-            playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, 0, horizontalAccel * Time.deltaTime);
+            if (surfaceInteractions.climbingIceCream)
+            {
+                playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, -surfaceInteractions.iceCreamSlide, horizontalAccel * Time.deltaTime);
+            } else
+            {
+                playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, 0, horizontalAccel * Time.deltaTime);
+            }
 
-            if (playerVelocity.x == 0)
+            if (playerVelocity.x == 0) //|| (playerVelocity.x == -surfaceInteractions.iceCreamSlide && surfaceInteractions.climbingIceCream))
             {
                 isMoving = false;
             }
@@ -154,7 +161,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 fallSpeed *= smallJumpGravityModifier;
             }
+
             playerVelocity.y = Mathf.MoveTowards(playerVelocity.y, fallSpeedLim, fallSpeed * Time.deltaTime);
+
+            //if (surfaceInteractions.climbingIceCream)
+            //{
+            //    playerVelocity.y = 0;
+            //}
+            
         } else
         {
             playerVelocity.y = 0;
@@ -165,11 +179,11 @@ public class PlayerMovement : MonoBehaviour
     {
         Physics2D.queriesStartInColliders = false;
 
-        touchingGround = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.down, 0.05f, layers);
+        touchingGround = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, -transform.up, 0.1f, layers);
         touchingCeil = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.up, 0.05f, layers);
-        touchingRight = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.right, 0.05f, layers);
-        touchingLeft = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.up, 0.05f, layers);
-        aboutToLand = !touchingGround && Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.down, distanceThreshold, layers);
+        touchingRight = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, transform.right, 0.05f, layers);
+        touchingLeft = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, -transform.right, 0.05f, layers);
+        aboutToLand = !touchingGround && Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, -transform.up, distanceThreshold, layers);
 
         if (touchingCeil)
         {
@@ -189,7 +203,6 @@ public class PlayerMovement : MonoBehaviour
 
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders; // STUDY THIS
     }
-
     private void GetInput()
     {
         jumpKeyDown = Input.GetButtonDown("Jump");
@@ -200,8 +213,11 @@ public class PlayerMovement : MonoBehaviour
             jumpTime = Time.time;
             justJumped = true;
             justLanded = false;
-            // Deal With Orange Platforms
+
+            // Deal With Surface Interactions
             surfaceInteractions.stick = false;
+            surfaceInteractions.climbingIceCream = false;
+            transform.rotation = playerRotation;
         } else
         {
             justJumped = false;
@@ -229,7 +245,6 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = currentScale;
         flipSprite = !flipSprite;
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("OrangePlatform"))
@@ -237,7 +252,6 @@ public class PlayerMovement : MonoBehaviour
             surfaceInteractions.stick = true;
         }
     }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("OrangePlatform"))
@@ -246,20 +260,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.collider.CompareTag("OrangePlatform"))
-    //    {
-    //        surfaceInteractions.stick = true;
-    //    }
-    //}
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Slope"))
+        {
+            transform.rotation = collision.transform.rotation;
+            surfaceInteractions.climbingIceCream = true;
+        }
+    }
 
-    //private void OnCollisionExit2D(Collision2D collision)
-    //{
-    //    if (collision.collider.CompareTag("OrangePlatform"))
-    //    {
-    //        surfaceInteractions.stick = false;
-    //    }
-    //}
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Slope"))
+        {
+            //transform.rotation = playerRotation;
+            //surfaceInteractions.climbingIceCream = false;
+        }
+    }
 }
 

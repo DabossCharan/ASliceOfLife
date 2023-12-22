@@ -23,10 +23,12 @@ public class PlayerInteract : MonoBehaviour
         GetInput();
 
         // Start Dialog
-        if (talk && !dialogTrigger.dialogueStarted)
-        {
-            dialogTrigger.TriggerDialogue();
-        } else if (talk)
+        //if (talk && !dialogTrigger.dialogueStarted)
+        //{
+        //    dialogTrigger.TriggerDialogue();
+        //} 
+        
+        if (talk)
         {
             dialogSystem.DisplayDialogue();
         }
@@ -35,5 +37,13 @@ public class PlayerInteract : MonoBehaviour
     private void GetInput()
     {
         talk = Input.GetButtonDown("Talk");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Ron" && !dialogTrigger.dialogueStarted)
+        {
+            dialogTrigger.TriggerDialogue();
+        }
     }
 }
