@@ -163,12 +163,6 @@ public class PlayerMovement : MonoBehaviour
             }
 
             playerVelocity.y = Mathf.MoveTowards(playerVelocity.y, fallSpeedLim, fallSpeed * Time.deltaTime);
-
-            //if (surfaceInteractions.climbingIceCream)
-            //{
-            //    playerVelocity.y = 0;
-            //}
-            
         } else
         {
             playerVelocity.y = 0;
@@ -178,7 +172,6 @@ public class PlayerMovement : MonoBehaviour
     private void Collisions()
     {
         Physics2D.queriesStartInColliders = false;
-
         touchingGround = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, -transform.up, 0.1f, layers);
         touchingCeil = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, Vector2.up, 0.05f, layers);
         touchingRight = Physics2D.CapsuleCast(playerCollider.bounds.center, playerCollider.size, playerCollider.direction, 0, transform.right, 0.05f, layers);
@@ -250,6 +243,8 @@ public class PlayerMovement : MonoBehaviour
         if (collision.CompareTag("OrangePlatform"))
         {
             surfaceInteractions.stick = true;
+            surfaceInteractions.orangeSurfaceActive = true;
+            surfaceInteractions.iceCreamSurfaceActive = false;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -262,10 +257,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Slope"))
+        if (collision.collider.CompareTag("IceCream"))
         {
             transform.rotation = collision.transform.rotation;
             surfaceInteractions.climbingIceCream = true;
+            surfaceInteractions.iceCreamSurfaceActive = true;
+            surfaceInteractions.orangeSurfaceActive = false;
+        } else if (collision.collider.CompareTag("Slope"))
+        {
+            transform.rotation = collision.transform.rotation;
         }
     }
 
@@ -273,8 +273,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.collider.CompareTag("Slope"))
         {
-            //transform.rotation = playerRotation;
-            //surfaceInteractions.climbingIceCream = false;
+            transform.rotation = playerRotation;
         }
     }
 }

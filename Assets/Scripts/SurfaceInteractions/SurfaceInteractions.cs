@@ -11,10 +11,12 @@ public class SurfaceInteractions : MonoBehaviour
     public float stickyJumpBonus;
     public float stickyHorizontalBonus;
     public float stickyBonusTime;
+    public bool orangeSurfaceActive;
 
     [Header("Ice Cream Mountain Settings")]
     public bool climbingIceCream = false;
     public float iceCreamSlide;
+    public bool iceCreamSurfaceActive;
 
     public bool hasBonus = false;
     private float regularJumpForce;
@@ -35,8 +37,14 @@ public class SurfaceInteractions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleOrangePlatform();
-        HandleIceCreamMountain();
+        if (orangeSurfaceActive)
+        {
+            HandleOrangePlatform();
+        } else if (iceCreamSurfaceActive)
+        {
+            HandleIceCreamMountain();
+        }
+        // It seems that the Surface Interactions are Disrupting Each Other, so Probably need to separate 
     }
 
     #region HandleOrangePlatforms
@@ -94,13 +102,17 @@ public class SurfaceInteractions : MonoBehaviour
             {
                 CancelBonus(0, iceCreamSlide);
             }
-
-        } else if (climbingIceCream)
+        } else
         {
             if (!hasBonus)
             {
                 AddBonus(0, -iceCreamSlide);
             }
+
+            //if (!playerMovement.touchingGround)
+            //{
+            //    climbingIceCream = false;
+            //}
         }
 
         

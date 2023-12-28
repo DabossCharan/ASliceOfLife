@@ -9,6 +9,8 @@ TagManager:
   - Menu
   - Ron
   - Slope
+  - Ground
+  - IceCream
   layers:
   - Default
   - TransparentFX

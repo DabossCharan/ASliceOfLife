@@ -20,8 +20,8 @@ public class PauseMenu : MonoBehaviour
     private TMP_Text retryText;
     private TMP_Text exitText;
     public Button currentObject;
-    private Color selectedColor = new Color(1, 0, 0, 1);
-    private Color unselectedColor = new Color(0, 0, 0, 1);
+    public Color selectedColor;
+    public Color unselectedColor;
 
     // Start is called before the first frame update
     void Start()
@@ -43,8 +43,8 @@ public class PauseMenu : MonoBehaviour
         {
             // I'm crying at the fact that I'm repeatedly making a reference to an object in UPDATE
             // i cri everytiem. If you can make it better, pls do.
+            SelectText();
             HighlightText();
-            currentObject = EventSystem.current.currentSelectedGameObject.gameObject.GetComponent<Button>();
         }
     }
 
@@ -113,9 +113,18 @@ public class PauseMenu : MonoBehaviour
             retryText.color = unselectedColor;
             exitText.color = selectedColor;
         }
-        else if (currentObject == null)
+    }
+
+    private void SelectText()
+    {
+        if (EventSystem.current.currentSelectedGameObject == null)
         {
-            EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
+            resumeButton.Select();
+            currentObject = resumeButton;
+        }
+        else
+        {
+            currentObject = EventSystem.current.currentSelectedGameObject.gameObject.GetComponent<Button>();
         }
     }
 }
