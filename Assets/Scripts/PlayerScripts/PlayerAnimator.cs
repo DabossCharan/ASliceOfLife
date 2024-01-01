@@ -43,7 +43,11 @@ public class PlayerAnimator : MonoBehaviour
         }
         else if (playerMovement.playerVelocity.y < 0 && !playerMovement.grounded)//&& !surfaceInteractions.climbingIceCream)
         {
-            playerAnimator.SetBool("isFalling", true);
+            if (!surfaceInteractions.climbingIceCream)
+            {
+                playerAnimator.SetBool("isFalling", true);
+            }
+            
             //playerAnimator.SetBool("isJumping", false);
             //playerAnimator.SetBool("isLanding", false);
             //playerAnimator.SetBool("startJump", false);

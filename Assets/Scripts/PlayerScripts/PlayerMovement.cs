@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     // References to Player Components Or Outside
-    public LayerMask layers;
+    [SerializeField] private LayerMask layers;
     private Rigidbody2D playerRb;
     private CapsuleCollider2D playerCollider;
     private SurfaceInteractions surfaceInteractions;
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
                 playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, 0, horizontalAccel * Time.deltaTime);
             }
 
-            if (playerVelocity.x == 0) //|| (playerVelocity.x == -surfaceInteractions.iceCreamSlide && surfaceInteractions.climbingIceCream))
+            if (playerVelocity.x == 0 || (surfaceInteractions.climbingIceCream))
             {
                 isMoving = false;
             }
@@ -147,6 +147,13 @@ public class PlayerMovement : MonoBehaviour
             grounded = false;
             playerVelocity.y = jumpForce;
             smallJump = false;
+            transform.rotation = playerRotation;
+
+
+            //if (touchingRight && surfaceInteractions.climbingIceCream)
+            //{
+            //    playerVelocity.x = 0;
+            //}
         }
     }
  
@@ -163,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             playerVelocity.y = Mathf.MoveTowards(playerVelocity.y, fallSpeedLim, fallSpeed * Time.deltaTime);
-        } else
+        } else if (grounded) //&& !surfaceInteractions.climbingIceCream)
         {
             playerVelocity.y = 0;
         }
@@ -210,7 +217,6 @@ public class PlayerMovement : MonoBehaviour
             // Deal With Surface Interactions
             surfaceInteractions.stick = false;
             surfaceInteractions.climbingIceCream = false;
-            transform.rotation = playerRotation;
         } else
         {
             justJumped = false;
@@ -259,7 +265,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.collider.CompareTag("IceCream"))
         {
-            transform.rotation = collision.transform.rotation;
+            ContactPoint2D contactPoint = collision.GetContact(0);
+            Quaternion contactPointRotation = Quaternion.FromToRotation(Vector3.up, contactPoint.normal);
+            transform.rotation = contactPointRotation;
+            //transform.rotation = collision.collider.transform.rotation;
             surfaceInteractions.climbingIceCream = true;
             surfaceInteractions.iceCreamSurfaceActive = true;
             surfaceInteractions.orangeSurfaceActive = false;
@@ -269,9 +278,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("IceCream"))
+        {
+            ContactPoint2D contactPoint = collision.GetContact(0);
+            Quaternion contactPointRotation = Quaternion.FromToRotation(Vector3.up, contactPoint.normal);
+            transform.rotation = contactPointRotation;
+            surfaceInteractions.climbingIceCream = true;
+        }
+    }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Slope"))
+        if (collision.collider.CompareTag("Slope") || collision.collider.CompareTag("IceCream"))
         {
             transform.rotation = playerRotation;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SurfaceInteractions : MonoBehaviour
@@ -17,6 +16,7 @@ public class SurfaceInteractions : MonoBehaviour
     public bool climbingIceCream = false;
     public float iceCreamSlide;
     public bool iceCreamSurfaceActive;
+    public float icedSpeed;
 
     public bool hasBonus = false;
     private float regularJumpForce;
@@ -96,26 +96,41 @@ public class SurfaceInteractions : MonoBehaviour
     #region IceCreamMountain
     void HandleIceCreamMountain()
     {
-        if (!climbingIceCream)
-        {   
-            if (hasBonus)
-            {
-                CancelBonus(0, iceCreamSlide);
-            }
-        } else
-        {
-            if (!hasBonus)
-            {
-                AddBonus(0, -iceCreamSlide);
-            }
+        ////if (surfaceInteractions.climbingIceCream)
+        //{
+        //    playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, -surfaceInteractions.iceCreamSlide, horizontalAccel * Time.deltaTime);
+        //}
 
-            //if (!playerMovement.touchingGround)
-            //{
-            //    climbingIceCream = false;
-            //}
-        }
+        //if (!climbingIceCream)
+        //{   
+        //    if (hasBonus)
+        //    {
+        //        CancelBonus(0, iceCreamSlide);
+        //    }
+        //} else
+        //{
+        //    if (playerMovement.playerVelocity.x <= 0)
+        //    {
+        //        CancelBonus(0, icedSpeed);
+        //        AddBonus(0, -iceCreamSlide);
+        //    }
+        //    else
+        //    {
+        //        CancelBonus(0, iceCreamSlide);
+        //        AddBonus(0, -icedSpeed);
+        //    }
+        //    //if (!hasBonus)
+        //    //{
 
-        
+        //    //}
+
+        //    //if (!playerMovement.touchingGround)
+        //    //{
+        //    //    climbingIceCream = false;
+        //    //}
+        //}
+
+
     }
     #endregion
 

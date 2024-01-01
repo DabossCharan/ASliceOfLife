@@ -27,7 +27,7 @@ public class StopMovement : MonoBehaviour
 
     public void ResumePlayerMovement()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
         movementScript.enabled = true;
     }
 }

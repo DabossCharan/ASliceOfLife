@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -10,8 +9,8 @@ using TMPro;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuPanel;
-    private StopMovement stopPlayerScript;
-    private PlayerInteract playerInteract;
+    public StopMovement stopPlayerScript;
+    public PlayerInteract playerInteract;
     public bool isPaused;
     public Button resumeButton;
     public Button retryButton;
@@ -28,10 +27,11 @@ public class PauseMenu : MonoBehaviour
     {
         stopPlayerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<StopMovement>();
         playerInteract = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteract>();
-        Time.timeScale = 1.0f;
         resumeText = resumeButton.GetComponentInChildren<TMP_Text>();
         retryText = retryButton.GetComponentInChildren<TMP_Text>();
         exitText = exitButton.GetComponentInChildren<TMP_Text>();
+        Time.timeScale = 1.0f;
+        AudioListener.pause = false;
     }
 
     // Update is called once per frame
@@ -60,6 +60,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        Time.timeScale = 1.0f;
         isPaused = false;
         AudioListener.pause = false;
         pauseMenuPanel.SetActive(false);
@@ -85,11 +86,13 @@ public class PauseMenu : MonoBehaviour
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Resume();
     }
 
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Resume();
     }
 
     private void HighlightText()

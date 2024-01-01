@@ -6,12 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/Scenes/ApprovedScenes/MainMenu.unity
     guid: f8960e5cc00d6084782619a6f42bc021
   - enabled: 1
-    path: Assets/Scenes/IntroCutscene.unity
+    path: Assets/Scenes/ApprovedScenes/IntroCutscene.unity
     guid: b8db8275888a82244a2326e883f49d74
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Scenes/ApprovedScenes/OrangeLevel.unity
+    guid: 640740556b8259d449f76de70665fb9a
+  - enabled: 1
+    path: Assets/Scenes/ApprovedScenes/OrangeLevel2.unity
+    guid: 7033662ef6a858b43a124467e483950e
+  - enabled: 1
+    path: Assets/Scenes/ApprovedScenes/IceCreamMountain.unity
+    guid: 61a320d27286a7c4b85e083898feea8b
+  - enabled: 1
+    path: Assets/Scenes/ApprovedScenes/Credits.unity
+    guid: 7bad19d78481eeb49aca0481941c7d2a
   m_configObjects: {}

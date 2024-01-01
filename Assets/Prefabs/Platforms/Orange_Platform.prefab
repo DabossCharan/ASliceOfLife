@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4229053430426285302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.16, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 474139596897708580}
   - component: {fileID: 7436596937693614144}
   - component: {fileID: 4401969362392546179}
+  - component: {fileID: 4327880321250642627}
   m_Layer: 0
   m_Name: Orange_Platform
   m_TagString: Untagged
@@ -232,3 +233,30 @@ PolygonCollider2D:
       - {x: -0.5, y: -0.7}
       - {x: -1.6, y: -0.1}
   m_UseDelaunayMesh: 0
+--- !u!50 &4327880321250642627
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6874735458780564055}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7

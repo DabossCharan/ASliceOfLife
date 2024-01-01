@@ -21,8 +21,13 @@ public class MainMenu : MonoBehaviour
     public Button currentObject;
     public Color selectedColor;
     public Color unselectedColor;
+    public GameObject howToPlayPanel;
+    private bool howToPlaying = false;
+    public AudioSource audioSource;
+
     private void Start()
     {
+        Time.timeScale = 1.0f;
         playText = playButton.GetComponentInChildren<TMP_Text>();
         howToPlayText = howToPlayButton.GetComponentInChildren<TMP_Text>();
     }
@@ -33,6 +38,7 @@ public class MainMenu : MonoBehaviour
         {
             time += Time.deltaTime;
             alpha = Mathf.Lerp(0, 1, time / transitionDuration);
+            audioSource.volume = Mathf.Lerp(1, 0, time / transitionDuration);
             blackScreen.color = new Color(blackScreen.color.r, blackScreen.color.g, blackScreen.color.b, alpha);
             playText.color = new Color(playText.color.r, playText.color.g, playText.color.b, 1 - alpha);
             howToPlayText.color = new Color(howToPlayText.color.r, howToPlayText.color.g, howToPlayText.color.b, 1 - alpha);
@@ -44,11 +50,18 @@ public class MainMenu : MonoBehaviour
             }
 
         }
-        else
+        else if (!howToPlaying)
         {
             SelectText();
             HighlightText();
         }
+
+        if (howToPlaying && Input.GetKeyDown(KeyCode.Escape))
+        {
+            howToPlaying = false;
+            howToPlayPanel.SetActive(false);
+        }
+
         
     }
     public void PlayGame()
@@ -80,5 +93,11 @@ public class MainMenu : MonoBehaviour
         {
             currentObject = EventSystem.current.currentSelectedGameObject.gameObject.GetComponent<Button>();
         }
+    }
+
+    public void HowToPlay()
+    {
+        howToPlayPanel.SetActive(true);
+        howToPlaying = true;
     }
 }
